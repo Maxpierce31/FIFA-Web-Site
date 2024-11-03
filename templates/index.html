@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIFA Player Search</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212; /* Dark background */
+            color: #e0e0e0; /* Light text color for contrast */
+            margin: 0;
+            padding: 0;
+            padding-top: 100px; /* Adjusted padding-top to prevent overlap */
+        }
+        h1 {
+            text-align: center;
+            color: #005397; /* Updated accent color */
+            margin-bottom: 20px;
+        }
+        #filter-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #player-position {
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #333; /* Darker border */
+            border-radius: 4px;
+            background: #2c2c2c; /* Dark input background */
+            color: #e0e0e0; /* Light text color */
+            width: 200px; /* Fixed width for consistency */
+            appearance: none; /* Remove default arrow */
+            cursor: pointer; /* Indicate it's interactive */
+            text-align: center; /* Center the text */
+        }
+        /* Adjust form container */
+        .form-container {
+            display: flex;
+            justify-content: center; /* Center the forms */
+            gap: 20px; /* Add space between the forms */
+            max-width: 1200px;
+            margin: 0 auto 20px;
+            padding: 20px;
+            background: #1f1f1f;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* .form-container.center {
+            justify-content: center;
+        } */
+
+        .form {
+            flex: 1; /* Make both forms take up equal space */
+            max-width: 500px; /* Set a maximum width to keep them manageable */
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Space between form elements */
+        }
+        /* Combine styles for text and number inputs */
+        input[type="text"],
+        input[type="number"] {
+            box-sizing: border-box;
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #333; /* Darker border */
+            border-radius: 4px;
+            background: #2c2c2c; /* Dark input background */
+            color: #e0e0e0; /* Light text color */
+        }
+
+        input[type="text"] {
+            width: 100%;
+        }
+
+        input[type="number"] {
+            width: 50px;
+            text-align: center;
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            gap: 10px; /
+        }
+
+        .input-row input[type="text"] {
+            flex: 1;
+        }
+        button {
+            padding: 10px 20px;
+            margin-left: 5px;
+            border: none;
+            border-radius: 4px;
+            background-color: #005397; /* Updated button color */
+            color: #ffffff; /* Light text color for button */
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #003d6a; /* Darker shade of blue on hover */
+        }
+        #results {
+            display: flex;
+            justify-content: space-between;
+            max-width: 700px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #1f1f1f; /* Dark background for results */
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(20, 106, 38, 0.5);
+        }
+        #results.center {
+            justify-content: center;
+        }
+        #form-container.center {
+            justify-content: center;
+        }
+        .player-info {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: #2c2c2c; /* Slightly lighter dark background */
+            border-radius: 8px;
+            border: 2px solid #005397; /* Updated green to blue border */
+        }
+        .player-info h2 {
+            margin: 0;
+            color: #005397; /* Updated accent color */
+        }
+        .player-info p {
+            margin: 5px 0;
+        }
+        #compare-checkbox-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        #analysis-button-container {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #analysis-result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #2c2c2c;
+            border-radius: 8px;
+            border: 2px solid #005397;
+            text-align: center;
+        }
+        /* Adjusted Dropdown arrow and content */
+        #dropdown {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%; /* Reduced width to create space on sides */
+            background-color: #1f1f1f; /* Match background */
+            z-index: 1000; /* Ensure it stays on top */
+            border-radius: 16px; /* More rounded corners */
+            overflow: hidden; /* To handle border radius */
+        }
+
+        #dropdown-toggle {
+            text-align: center;
+            padding: 10px;
+            font-size: 24px;
+            color: #e0e0e0;
+            cursor: pointer;
+        }
+
+        #dropdown-content {
+            display: none; /* Initially hidden */
+            background-color: #1f1f1f;
+            padding: 10px;
+            flex-direction: row; /* Lay out items horizontally */
+            align-items: center;
+            justify-content: space-evenly; /* Even spacing */
+        }
+
+        #dropdown:hover #dropdown-content {
+            display: flex;
+        }
+
+        #dropdown-content > div
+        {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 200px; /* Fixed width for equal sizing */
+        }
+
+        /* Ensure the content inside each div is centered */
+        #dropdown-content label,
+        #dropdown-content select,
+        #dropdown-content button {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        #analysis-button-container {
+            margin-bottom: 40px;
+        }
+
+        #player-position {
+            font-size: 15px;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            width: 100%;
+        }
+
+
+        #filter-container {
+            width: 250px;;
+        }
+
+        #dropdown-content button {
+            padding: 10px 20px;
+            margin: 0; /* Ensure no extra margin is added */
+        }
+
+        #compare-checkbox-container label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #compare-checkbox-container input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        /* Adjust styles for main content */
+        #main-content {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 20px auto;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            padding-top: 100px; /* Adjusted padding-top to prevent overlap */
+        }
+
+        #results {
+            width: 65%;
+        }
+
+        #analysis-result {
+            width: 30%;
+            padding: 20px;
+            background: #1f1f1f;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(20, 106, 38, 0.5);
+            color: #e0e0e0;
+            margin-left: 20px;
+        }
+
+        #results {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #results1, #results2 {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #1f1f1f;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(20, 106, 38, 0.5);
+            color: #e0e0e0;
+        }
+
+        /* Adjust form container */
+        .form-container {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto 20px;
+            padding: 20px;
+            background: #1f1f1f;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .form-container.center {
+            justify-content: center;
+        }
+
+        .form {
+            width: 48%;
+        }
+
+        .form input[type="text"] {
+            width: calc(100% - 22px);
+        }
+    </style>
+</head>
+<body>
+   <!-- Arrow at the top -->
+   <div id="dropdown">
+    <div id="dropdown-toggle">&#x25BC;</div> <!-- Downward arrow symbol -->
+    <div id="dropdown-content">
+        <div id="compare-checkbox-container">
+            <label>
+                <input type="checkbox" id="compare-checkbox" checked> Compare Two Players
+            </label>
+        </div>
+        <div id="filter-container">
+            <select id="player-position">
+                <option value="">No Position Filter</option>
+                <option value="Forward">Forward</option>
+                <option value="Midfielder">Midfielder</option>
+                <option value="Defender">Defender</option>
+            </select>
+        </div>
+        <div id="analysis-button-container">
+            <button id="analysis-button">Analysis</button>
+        </div>
+    </div>
+</div>
+
+    <h1>FIFA Player Search</h1>
+
+    <div class="form-container" id="form-container">
+        <div class="form" id="form1-container">
+            <form id="search-form1">
+                <div class="input-row">
+                    <input type="text" id="player-name1" placeholder="Enter soccer player's name">
+                    <input type="number" id="overall-1" placeholder="Ovr" value="0">
+                </div>
+                <input type="text" id="team-name1" placeholder="Enter soccer player's team">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div class="form" id="form2-container">
+            <form id="search-form2">
+                <div class="input-row">
+                    <input type="text" id="player-name2" placeholder="Enter soccer player's name">
+                    <input type="number" id="overall-2" placeholder="Ovr" value="0"> 
+                </div>
+                <input type="text" id="team-name2" placeholder="Enter soccer player's team">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main content area -->
+    <div id="main-content">
+        <div id="results">
+            <div id="results1"></div>
+            <div id="results2"></div>
+        </div>
+        <div id="analysis-result"></div>
+    </div>
+
+    <script>
+        const compareCheckbox = document.getElementById('compare-checkbox');
+        const playerPositionSelect = document.getElementById('player-position');
+        const formContainer1 = document.getElementById('form1-container');
+        const formContainer2 = document.getElementById('form2-container');
+        const formContainer = document.getElementById('form-container');
+
+        const resultsDiv1 = document.getElementById('results1');
+        const resultsDiv2 = document.getElementById('results2');
+        const analysisResultDiv = document.getElementById('analysis-result');
+        const analysisButton = document.getElementById('analysis-button');
+
+        function updateLayout() {
+            if (compareCheckbox.checked) {
+                formContainer.classList.remove('center');
+                formContainer2.style.display = 'flex';
+                resultsDiv2.style.display = 'block';
+            } else {
+                formContainer.classList.add('center');
+                formContainer2.style.display = 'none';
+                resultsDiv2.style.display = 'none';
+            }
+        }
+
+        compareCheckbox.addEventListener('change', updateLayout);
+
+        // Initial layout update
+        updateLayout();
+
+        document.getElementById('search-form1').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const playerName1 = document.getElementById('player-name1').value.trim();
+            const teamName1 = document.getElementById('team-name1').value.trim();
+            const overall = document.getElementById('overall-1').value.trim();
+            const position = playerPositionSelect.value;
+            fetchPlayerData(playerName1, teamName1, position, overall, resultsDiv1);
+        });
+
+        document.getElementById('search-form2').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const playerName2 = document.getElementById('player-name2').value.trim();
+            const teamName2 = document.getElementById('team-name2').value.trim();
+            const overall = document.getElementById('overall-2').value.trim();
+            const position = playerPositionSelect.value;
+            fetchPlayerData(playerName2, teamName2, position, overall, resultsDiv2);
+        });
+
+        function fetchPlayerData(playerName, teamName, playerposition, overall, resultDiv) {
+            fetch(`/get_player?name=${encodeURIComponent(playerName)}&team=${encodeURIComponent(teamName)}&overall=${encodeURIComponent(overall)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Check if the data is an array
+                    if (Array.isArray(data)) {
+                        if (data.length > 0) {
+                            resultDiv.innerHTML = data.map(player => `
+                                <div class="player-info">
+                                    <h2>${player.long_name}</h2>
+                                    <p><strong>Position:</strong> ${player.player_positions}</p>
+                                    <p><strong>Club:</strong> ${player.club_name}</p>
+                                    <p><strong>League:</strong> ${player.league_name}</p>
+                                    <p><strong>Overall Rating:</strong> ${player.overall}</p>
+                                    <p><strong>Age:</strong> ${player.age}</p>
+                                    <p><strong>Height:</strong> ${player.height_cm} cm</p>
+                                    <p><strong>Preferred Foot:</strong> ${player.preferred_foot}</p>
+                                    <p><strong>Pace:</strong> ${player.pace}</p>
+                                    <p><strong>Shooting:</strong> ${player.shooting}</p>
+                                    <p><strong>Passing:</strong> ${player.passing}</p>
+                                    <p><strong>Dribbling:</strong> ${player.dribbling}</p>
+                                    <p><strong>Defending:</strong> ${player.defending}</p>
+                                    <p><strong>Physical:</strong> ${player.physic}</p>
+                                </div>
+                            `).join('');
+                        } else {
+                            resultDiv.innerHTML = '<p>No results found.</p>';
+                        }
+                    } else {
+                        resultDiv.innerHTML = '<p>Unexpected response format.</p>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching data:', error);
+                    resultDiv.innerHTML = '<p>An error occurred while fetching data.</p>';
+                });
+        }
+
+        analysisButton.addEventListener('click', function() {
+            const playerData1 = resultsDiv1.querySelector('.player-info');
+            const playerData2 = resultsDiv2.querySelector('.player-info');
+            const position = playerPositionSelect.value;
+
+            if (!playerData1 || !playerData2) {
+                analysisResultDiv.innerHTML = '<p>Please search for both players before analysis.</p>';
+                return;
+            }
+
+            const player1 = {
+                name: playerData1.querySelector('h2').textContent,
+                position: playerData1.querySelector('p:nth-child(2)').textContent.split(': ')[1],
+                club: playerData1.querySelector('p:nth-child(3)').textContent.split(': ')[1],
+                league: playerData1.querySelector('p:nth-child(4)').textContent.split(': ')[1],
+                overall: playerData1.querySelector('p:nth-child(5)').textContent.split(': ')[1],
+                age: playerData1.querySelector('p:nth-child(6)').textContent.split(': ')[1],
+                height: playerData1.querySelector('p:nth-child(7)').textContent.split(': ')[1],
+                preferredFoot: playerData1.querySelector('p:nth-child(8)').textContent.split(': ')[1],
+                pace: playerData1.querySelector('p:nth-child(9)').textContent.split(': ')[1],
+                shooting: playerData1.querySelector('p:nth-child(10)').textContent.split(': ')[1],
+                passing: playerData1.querySelector('p:nth-child(11)').textContent.split(': ')[1],
+                dribbling: playerData1.querySelector('p:nth-child(12)').textContent.split(': ')[1],
+                defending: playerData1.querySelector('p:nth-child(13)').textContent.split(': ')[1],
+                physical: playerData1.querySelector('p:nth-child(14)').textContent.split(': ')[1]
+            };
+
+            const player2 = {
+                name: playerData2.querySelector('h2').textContent,
+                position: playerData2.querySelector('p:nth-child(2)').textContent.split(': ')[1],
+                club: playerData2.querySelector('p:nth-child(3)').textContent.split(': ')[1],
+                league: playerData2.querySelector('p:nth-child(4)').textContent.split(': ')[1],
+                overall: playerData2.querySelector('p:nth-child(5)').textContent.split(': ')[1],
+                age: playerData2.querySelector('p:nth-child(6)').textContent.split(': ')[1],
+                height: playerData2.querySelector('p:nth-child(7)').textContent.split(': ')[1],
+                preferredFoot: playerData2.querySelector('p:nth-child(8)').textContent.split(': ')[1],
+                pace: playerData2.querySelector('p:nth-child(9)').textContent.split(': ')[1],
+                shooting: playerData2.querySelector('p:nth-child(10)').textContent.split(': ')[1],
+                passing: playerData2.querySelector('p:nth-child(11)').textContent.split(': ')[1],
+                dribbling: playerData2.querySelector('p:nth-child(12)').textContent.split(': ')[1],
+                defending: playerData2.querySelector('p:nth-child(13)').textContent.split(': ')[1],
+                physical: playerData2.querySelector('p:nth-child(14)').textContent.split(': ')[1]
+            };
+
+            fetch(`/the_judge`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ player1, player2, position }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                const { better_player, fifa_better_player, reasons } = data;
+
+                let reasonsHTML = '';
+                if (reasons.length > 0) {
+                    reasonsHTML = '<ul>' + reasons.map(reason => `<li>${reason}</li>`).join('') + '</ul>';
+                }
+
+                analysisResultDiv.innerHTML = `
+                    <p><strong>Better Player:</strong></p>
+                    <p>${better_player}</p>
+                    <p><strong>FIFA Better Player:</strong></p>
+                    <p>${fifa_better_player}</p>
+                    <p><strong>Reasons:</strong></p>
+                    ${reasonsHTML}
+                `;
+            })
+            .catch(error => {
+                console.error('Error during analysis:', error);
+                analysisResultDiv.innerHTML = '<p>An error occurred during analysis.</p>';
+            });
+        });
+    </script>
+</body>
+</html>

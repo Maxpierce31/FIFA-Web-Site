@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- ... existing head content ... -->
+    <style>
+        /* Existing styles ... */
+
+        /* Dropdown arrow and content */
+        #dropdown {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%; /* Adjusted width */
+            background-color: #1f1f1f;
+            z-index: 1000;
+            border-radius: 16px; /* More rounded corners */
+            overflow: hidden; /* To handle border radius changes */
+        }
+
+        #dropdown-toggle {
+            text-align: center;
+            padding: 10px;
+            font-size: 24px;
+            color: #e0e0e0;
+            cursor: pointer;
+            border-bottom: 1px solid #333; /* Line at the bottom when not hovered */
+        }
+
+        #dropdown-content {
+            display: none; /* Initially hidden */
+            background-color: #1f1f1f;
+            padding: 10px;
+            z-index: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: row; /* Lay out items horizontally */
+            justify-content: space-around; /* Spread them out evenly */
+            align-items: center;
+        }
+
+        #dropdown:hover #dropdown-content {
+            display: flex;
+        }
+
+        /* Remove bottom border radius when hovered */
+        #dropdown:hover {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        /* Remove bottom border when hovered */
+        #dropdown:hover #dropdown-toggle {
+            border-bottom: none;
+        }
+
+        #dropdown-content > div {
+            flex: 1;
+            text-align: center;
+        }
+
+        /* Adjust styles for main content */
+        #main-content {
+            display: flex;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding-top: 90px; /* Adjusted padding-top for fixed top bar */
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            padding-top: 90px; /* Adjusted padding-top to prevent overlap */
+        }
+
+        /* Rest of your existing styles... */
+    </style>
+</head>
+<body>
+    <!-- Arrow at the top -->
+    <div id="dropdown">
+        <div id="dropdown-toggle">&#x25BC;</div> <!-- Downward arrow symbol -->
+        <div id="dropdown-content">
+            <div id="compare-checkbox-container">
+                <label>
+                    <input type="checkbox" id="compare-checkbox" checked> Compare Two Players
+                </label>
+            </div>
+            <div id="filter-container">
+                <select id="player-position">
+                    <option value="">No Position Filter</option>
+                    <option value="Forward">Forward</option>
+                    <option value="Midfielder">Midfielder</option>
+                    <option value="Defender">Defender</option>
+                </select>
+            </div>
+            <div id="analysis-button-container">
+                <button id="analysis-button">Analysis</button>
+            </div>
+        </div>
+    </div>
+
+    <h1>FIFA Player Search</h1>
+
+    <div class="form-container" id="form-container">
+        <!-- Existing form content -->
+        <div class="form" id="form1-container">
+            <form id="search-form1">
+                <input type="text" id="player-name1" placeholder="Enter soccer player's name">
+                <input type="text" id="team-name1" placeholder="Enter soccer player's team">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div class="form" id="form2-container">
+            <form id="search-form2">
+                <input type="text" id="player-name2" placeholder="Enter soccer player's name">
+                <input type="text" id="team-name2" placeholder="Enter soccer player's team">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main content area -->
+    <div id="main-content">
+        <div id="results">
+            <div id="results1"></div>
+            <div id="results2"></div>
+        </div>
+        <div id="analysis-result"></div>
+    </div>
+
+    <script>
+        // Existing JavaScript code...
+        const compareCheckbox = document.getElementById('compare-checkbox');
+        const playerPositionSelect = document.getElementById('player-position');
+        const formContainer1 = document.getElementById('form1-container');
+        const formContainer2 = document.getElementById('form2-container');
+        const formContainer = document.getElementById('form-container');
+
+        const resultsDiv1 = document.getElementById('results1');
+        const resultsDiv2 = document.getElementById('results2');
+        const analysisResultDiv = document.getElementById('analysis-result');
+        const analysisButton = document.getElementById('analysis-button');
+
+        function updateLayout() {
+            if (compareCheckbox.checked) {
+                formContainer.classList.remove('center');
+                formContainer2.style.display = 'flex';
+                resultsDiv2.style.display = 'block';
+            } else {
+                formContainer.classList.add('center');
+                formContainer2.style.display = 'none';
+                resultsDiv2.style.display = 'none';
+            }
+        }
+
+        compareCheckbox.addEventListener('change', updateLayout);
+
+        // Initial layout update
+        updateLayout();
+
+        // Rest of your JavaScript code...
+    </script>
+</body>
+</html>
