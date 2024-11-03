@@ -8,7 +8,7 @@ app = Flask(__name__)
 file_path = "output.csv" 
 # retrieving the actual dataset
 df = pd.read_csv(file_path)
-df = df[df['fifa_version'] == 24.0]
+#df = df[df['fifa_version'] == 24.0]
 # the columns we care about
 columns_to_keep = ['player_positions', 'long_name', 'overall', 'age', 'height_cm', 'club_name', 'league_name', 'skill_dribbling', 'pace', 'shooting', 'passing', 'dribbling', 'defending', 'physic', 'preferred_foot', 'goalkeeping_diving']
 dataset = df[columns_to_keep]
