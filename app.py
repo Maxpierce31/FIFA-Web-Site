@@ -5,7 +5,7 @@ import json
 app = Flask(__name__)
 
 # where our dataset is stored in the computer
-file_path = "male_players.csv" 
+file_path = "output.csv" 
 # retrieving the actual dataset
 df = pd.read_csv(file_path)
 df = df[df['fifa_version'] == 24.0]
